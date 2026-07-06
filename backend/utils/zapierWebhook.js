@@ -31,4 +31,27 @@ async function sendConfirmationWebhook(appointment, doctor, branch) {
   }
 }
 
-module.exports = { sendConfirmationWebhook };
+async function sendN8nAppointmentWebhook(appointment, doctor, branch) {
+  const url = process.env.N8N_WEBHOOK_URL || "https://ghourieng.app.n8n.cloud/webhook-test/Clinic%20Booking";
+
+  try {
+    await axios.post(url, {
+      event: "appointment_created",
+      appointmentId: appointment._id,
+      name: appointment.patientName,
+      phone: appointment.patientPhone,
+      doctor: doctor.name,
+      branch: branch.name,
+      date: appointment.date,
+      time: appointment.time,
+      source: appointment.source,
+      notes: appointment.notes,
+    });
+    return true;
+  } catch (err) {
+    console.error("n8n appointment webhook failed:", err.message);
+    return false;
+  }
+}
+
+module.exports = { sendConfirmationWebhook, sendN8nAppointmentWebhook };

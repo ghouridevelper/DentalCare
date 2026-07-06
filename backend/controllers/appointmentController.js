@@ -2,7 +2,7 @@ const Appointment = require("../models/Appointment");
 const Doctor = require("../models/Doctor");
 const Branch = require("../models/Branch");
 const { getAvailableSlots } = require("../utils/slotGenerator");
-const { sendConfirmationWebhook } = require("../utils/zapierWebhook");
+const { sendConfirmationWebhook, sendN8nAppointmentWebhook } = require("../utils/zapierWebhook");
 
 // POST /api/appointments  (public booking + manual receptionist entry)
 exports.createAppointment = async (req, res, next) => {
@@ -41,24 +41,12 @@ exports.createAppointment = async (req, res, next) => {
       notes,
     });
 
+    await sendN8nAppointmentWebhook(appointment, doctor, branch);
+
     const sent = await sendConfirmationWebhook(appointment, doctor, branch);
     if (sent) {
       appointment.confirmationSent = true;
       await appointment.save();
-      await
-      await fetch("https://ghourieng.app.n8n.cloud/webhook-test/Clinic Booking", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name: appointment.name,
-    phone: appointment.phone,
-    doctor: appointment.doctor,
-    date: appointment.date,
-    time: appointment.time,
-  }),
-});
     }
 
     const populated = await appointment.populate([
