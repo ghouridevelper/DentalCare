@@ -19,7 +19,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  origin: process.env.CORS_ORIGIN || "https://dental-care-nvxr-git-main-ghouri-dev1.vercel.app/",
   credentials: true,
 }));
 app.use(express.json());

@@ -45,6 +45,20 @@ exports.createAppointment = async (req, res, next) => {
     if (sent) {
       appointment.confirmationSent = true;
       await appointment.save();
+      await
+      await fetch("https://ghourieng.app.n8n.cloud/webhook-test/Clinic Booking", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: appointment.name,
+    phone: appointment.phone,
+    doctor: appointment.doctor,
+    date: appointment.date,
+    time: appointment.time,
+  }),
+});
     }
 
     const populated = await appointment.populate([
