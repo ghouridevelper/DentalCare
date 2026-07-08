@@ -45,7 +45,7 @@ const run = async () => {
   const owner = await User.create({
     name: process.env.SEED_ADMIN_NAME || "Clinic Owner",
     email: process.env.SEED_ADMIN_EMAIL || "ghouri.dev.784@gmail.com",
-    password: process.env.SEED_ADMIN_PASSWORD || "Demo123!",
+    password: process.env.SEED_ADMIN_PASSWORD || "Ghouri@25",
     role: "owner",
   });
 
@@ -58,7 +58,7 @@ const run = async () => {
   });
 
   console.log("Seed complete.");
-  console.log(`Owner login -> email: ${owner.email}  password: ${process.env.SEED_ADMIN_PASSWORD || "Demo123!"}`);
+  console.log(`Owner login -> email: ${owner.email}  password: ${process.env.SEED_ADMIN_PASSWORD || "Ghouri@25"}`);
   console.log("Branches:", branchA.name, "/", branchB.name);
   console.log("Doctors:", doctors.map((d) => d.name).join(", "));
 

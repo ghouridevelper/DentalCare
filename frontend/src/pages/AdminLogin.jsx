@@ -7,7 +7,10 @@ import { useAuth } from "../context/AuthContext";
 export default function AdminLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    email: "ghouri.dev.784@gmail.com",
+    password: "Ghouri@25",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +63,7 @@ export default function AdminLogin() {
             />
           </div>
           {error && <p className="text-sm text-coral-dark bg-coral/10 px-4 py-2.5 rounded-xl">{error}</p>}
+          <p className="text-xs text-muted">Use the owner credentials to access the dashboard.</p>
           <button
             type="submit"
             disabled={loading}

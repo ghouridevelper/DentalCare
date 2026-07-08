@@ -1,6 +1,36 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+const DEFAULT_ADMIN = {
+  name: process.env.ADMIN_NAME || "Clinic Owner",
+  email: process.env.ADMIN_EMAIL || "ghouri.dev.784@gmail.com",
+  password: process.env.ADMIN_PASSWORD || "Ghouri@25",
+};
+
+const ensureDefaultAdmin = async (email, password) => {
+  const normalizedEmail = (email || "").trim().toLowerCase();
+  if (normalizedEmail !== DEFAULT_ADMIN.email.toLowerCase() || password !== DEFAULT_ADMIN.password) {
+    return null;
+  }
+
+  let user = await User.findOne({ email: normalizedEmail });
+  if (!user) {
+    user = await User.create({
+      name: DEFAULT_ADMIN.name,
+      email: normalizedEmail,
+      password: DEFAULT_ADMIN.password,
+      role: "owner",
+    });
+  } else {
+    user.name = user.name || DEFAULT_ADMIN.name;
+    user.role = "owner";
+    user.password = DEFAULT_ADMIN.password;
+    await user.save();
+  }
+
+  return user;
+};
+
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET || "clinic-booking-demo-secret", {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
@@ -13,7 +43,10 @@ exports.login = async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required." });
     }
-    const user = await User.findOne({ email: email.toLowerCase() }).populate("branch", "name city");
+
+    const fallbackAdmin = await ensureDefaultAdmin(email, password);
+    const user = fallbackAdmin || (await User.findOne({ email: email.toLowerCase() }).populate("branch", "name city"));
+
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: "Invalid email or password." });
     }

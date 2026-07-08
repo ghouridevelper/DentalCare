@@ -32,7 +32,7 @@ async function sendConfirmationWebhook(appointment, doctor, branch) {
 }
 
 async function sendN8nAppointmentWebhook(appointment, doctor, branch) {
-  const url = process.env.N8N_WEBHOOK_URL || "https://ghourieng.app.n8n.cloud/webhook/Clinic%20Booking";
+  const url = process.env.N8N_WEBHOOK_URL || "https://ghourieng.app.n8n.cloud/webhook/Clinic Booking";
 
   try {
     await axios.post(url, {

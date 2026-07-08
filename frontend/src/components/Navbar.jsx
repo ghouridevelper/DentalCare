@@ -6,6 +6,7 @@ import { Menu, X, HeartPulse } from "lucide-react";
 const links = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Doctors & Services" },
+  { to: "/admin/login", label: "Admin" },
   { to: "/contact", label: "Contact" },
 ];
 
